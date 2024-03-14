@@ -10,4 +10,4 @@ public class BoardProjectApplication {
         SpringApplication.run(BoardProjectApplication.class, args);
     }
 
-}
+    }
