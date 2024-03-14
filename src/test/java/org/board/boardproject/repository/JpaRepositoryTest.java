@@ -11,6 +11,12 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+// 아래에 어노테이션은 이 test단에서만 작동되므로 yml에 적용하여 모든 test단에 적용할 수 있도록 지정
+// ANY가 기본값으로, NONE을 주어 테스트 DB를 불러오지 않고 설정값에 적용된 DB를 사용
+// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+
+// yml에 작성된 spring test 경로를 지정한 값을 찾음
+// @ActiveProfiles("testdb")
 
 @DisplayName("JPA 연결 테스트")
 // Import 어노테이션은 테스트단에서 EnableJpaAuditing 어노테이션이 자동으로 생성되지 않아 잡아줘야한다
