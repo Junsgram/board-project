@@ -1,5 +1,6 @@
 package org.board.boardproject.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@Disabled("Spring Data REST 통합테스트는 불필요하므로 제외 -> DB에 영향을 주기에 제외처리")
 @DisplayName("Data Rest - API Test")
 @Transactional
 @AutoConfigureMockMvc
@@ -46,7 +49,7 @@ public class DataRestTest {
     void givenNothing_whenRequestArticleCommentFromArticle_thenReturnsArticleCommentsJsonResponse() throws Exception {
         // Given
         // When & Then
-        mvc.perform(get("/api/articles/5/articleComments"))
+        mvc.perform(get("/api/articles/5/articlecomments"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.valueOf("application/hal+json")));
     }
