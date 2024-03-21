@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 페이지</title>
+</head>
+
+<body>
+    <!-- 헤더 -->
+    <header>
+        header 삽입부
+        <hr>
+    </header>
+
+    <!-- 메인 페이지 - 테이블 -->
+    <main>
+        <!-- 검색바 : 제목, 본문, id, 닉네임, 해시태그 -->
+        <form>
+            <label for="search-type" hidden> 유형 </label>
+            <select name="search-type" id="search-type">
+                <option>제목</option>
+                <option>본문</option>
+                <option>id</option>
+                <option>닉네임</option>
+                <option>해시태그</option>
+            </select>
+            <label for="search-value" hidden > 검색어 </label>
+            <input type="search" placeholder="검색어를 입력해주세요." id="search-value" name="search-value"/>
+            <button type="submit">검색</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>제목</th>
+                    <th>해시태그</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>첫글</td>
+                    <td>#Java</td>
+                    <td>Junsgram</td>
+                    <td>2024-03-22</td>
+                </tr>
+                <tr>
+                    <td>두 번째 글</td>
+                    <td>#Java</td>
+                    <td>Junsgram</td>
+                    <td>2024-03-23</td>
+                </tr>
+                <tr>
+                    <td>세번 쨰 글/td>
+                    <td>#Java</td>
+                    <td>Junsgram</td>
+                    <td>2024-03-24</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <nav>
+            <table>
+                <tr>
+                    <td>previous</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>next</td>
+                </tr>
+            </table>
+        </nav>
+    </main>
+
+    <!-- 푸터 -->
+    <footer>
+        <hr>
+        footer 삽입부
+    </footer>
+
+</body>
+</html>
