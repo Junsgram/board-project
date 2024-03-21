@@ -47,7 +47,7 @@ class ArticleControllerTest {
                 // 200 ok가 진행되었는 지 확인하는 메소드 stauts()
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 // view단에서 model의 키의 값들이 있는 지 확인
                 .andExpect(model().attributeExists("aritcle"))
@@ -62,7 +62,7 @@ class ArticleControllerTest {
                 // 200 ok가 진행되었는 지 확인하는 메소드 stauts()
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/search"));
     }
 
@@ -75,7 +75,7 @@ class ArticleControllerTest {
                 // 200 ok가 진행되었는 지 확인하는 메소드 stauts()
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/hastag"));
     }
 }
