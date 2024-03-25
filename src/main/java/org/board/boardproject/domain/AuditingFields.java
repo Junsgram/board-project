@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AuditingFields {
+public abstract class AuditingFields {
     // datetimeformat으로 값 변경 iso객체, patter으로 내가 지정한 패턴으로 사용하는 방법 2가지가 있다.
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
