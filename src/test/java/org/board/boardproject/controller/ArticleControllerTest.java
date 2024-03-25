@@ -1,10 +1,12 @@
 package org.board.boardproject.controller;
 
+import org.board.boardproject.config.SecurityConfig;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -14,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName(" View 컨트롤러 - 게시글 ")
+@Import(SecurityConfig.class)
 // webMvcTest는 지정하지 않으면 모든 컨트롤러를 바라보기에 해당 클래스를 지정해서 사용
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
@@ -48,10 +51,10 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/detail"))
+                .andExpect(view().name("/articles/detail"))
                 // view단에서 model의 키의 값들이 있는 지 확인
-                .andExpect(model().attributeExists("aritcle"))
-                .andExpect(model().attributeExists("aritcleComments"));
+                .andExpect(model().attributeExists("article"))
+                .andExpect(model().attributeExists("article_comment"));
     }
     @Disabled("구현 중 ")
     @DisplayName("[view][GET] 게시글 검색 전용 페이지 - 정상 호출 확인 ")
