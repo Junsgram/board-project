@@ -12,8 +12,8 @@ import java.util.Objects;
 @Table(indexes = {
         @Index(columnList = "userId"),
         @Index(columnList = "email", unique = true),
-        @Index(columnList = "createAt"),
-        @Index(columnList = "createBy")
+        @Index(columnList = "createdAt"),
+        @Index(columnList = "createdBy")
 })
 @Entity
 public class UserAccount extends AuditingFields {

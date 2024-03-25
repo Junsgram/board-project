@@ -34,6 +34,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
@@ -41,6 +43,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // thymeleaf 디펜던시 설정
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    // security 디펜던시 설정
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     // Querydsl 디펜던시 설정
     implementation "com.querydsl:querydsl-jpa"

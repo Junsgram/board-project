@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,11 +78,11 @@ public class DataRestTest {
         // Given
 
         // When & Then
-        mvc.perform(get("api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(post("api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(put("api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(patch("api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(delete("api/userAccounts")).andExpect(status().isNotFound());
-        mvc.perform(head("api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(get("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(post("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(put("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(patch("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(delete("/api/userAccounts")).andExpect(status().isNotFound());
+        mvc.perform(head("/api/userAccounts")).andExpect(status().isNotFound());
     }
 }
