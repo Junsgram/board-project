@@ -5,6 +5,8 @@ import org.board.boardproject.domain.constant.SearchType;
 import org.board.boardproject.dto.response.ArticleResponse;
 import org.board.boardproject.dto.response.ArticleWithCommentResponse;
 import org.board.boardproject.service.ArticleService;
+import org.board.boardproject.service.PaginationService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +24,8 @@ import java.util.List;
 @Controller
 public class ArticleController {
     private final ArticleService articleService;
+    private final PaginationService paginationService;
+
 
     @GetMapping
     public String articles(
@@ -30,8 +34,10 @@ public class ArticleController {
             @RequestParam(required = false) String searchKeyword,
             @PageableDefault(size=10, sort="createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             ModelMap map) {
-        map.addAttribute("articles", articleService.searchArticles(searchType,searchKeyword,pageable)
-                .map(ArticleResponse::from));
+        Page<ArticleResponse> articles =  articleService.searchArticles(searchType,searchKeyword,pageable).map(ArticleResponse::from);
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),articles.getTotalPages());
+        map.addAttribute("articles", articles);
+        map.addAttribute("paginationBarNumbers", barNumbers);
         return "/articles/index";
     }
     @GetMapping("/{articleId}")
