@@ -15,11 +15,11 @@ public record ArticleWithCommentResponse (Long id,
                                          LocalDateTime createdAt,
                                          String email,
                                          String nickname,
-                                         Set<ArticleCommentResponse> articleCommentResponses
+                                         Set<ArticleCommentResponse> articleCommentsResponse
 ) implements Serializable {
 
-    public static ArticleWithCommentResponse of(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String email, String nickname, Set<ArticleCommentResponse> articleCommentResponses) {
-        return new ArticleWithCommentResponse(id, title, content, hashtag, createdAt, email, nickname, articleCommentResponses);
+    public static ArticleWithCommentResponse of(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String email, String nickname, Set<ArticleCommentResponse> articleCommentsResponse) {
+        return new ArticleWithCommentResponse(id, title, content, hashtag, createdAt, email, nickname, articleCommentsResponse);
     }
 
     public static ArticleWithCommentResponse from(ArticleWithCommentsDTO dto) {
