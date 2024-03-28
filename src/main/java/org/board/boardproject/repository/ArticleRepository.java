@@ -5,11 +5,17 @@ import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import org.board.boardproject.domain.Article;
 import org.board.boardproject.domain.QArticle;
+import org.board.boardproject.domain.constant.SearchType;
+import org.board.boardproject.dto.ArticleDTO;
+import org.board.boardproject.dto.ArticleWithCommentsDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.transaction.annotation.Transactional;
 
 // spring Data REST 사용하는 어노테이션 yml파일에 annotation으로 지정하였기 때문에 어노테이션으로 지정해야한다
 @RepositoryRestResource
@@ -18,6 +24,8 @@ public interface ArticleRepository extends
         // Article안에 있는 모든 필드에 대한 기본 검색기능을 추가
         QuerydslPredicateExecutor<Article>,
         QuerydslBinderCustomizer<QArticle>{
+
+    Page<Article> findByTitle(String searchKeyword, Pageable pageable);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {

@@ -10,7 +10,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@ToString
+// 생성일시와 생성자 등 Auditing에 적용된 값도 Tostring으로 반환하겠다 라는 코드
+@ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
@@ -24,6 +25,7 @@ public class Article extends AuditingFields{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter @ManyToOne(optional = false) private UserAccount userAccount;
 
     @Setter
     @Column(nullable = false)
@@ -36,7 +38,7 @@ public class Article extends AuditingFields{
 
     // 양뱡향 바인딩을 끊어주기 위해 Exclude를 지정
     @ToString.Exclude
-    @OrderBy("id")
+    @OrderBy("createdAt DESC")
     // mapppedBy를 하지 않으면 article_article_comment로 생성되는 것을 aritcle테이블로 온것으로 mapping 하는 역할
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final Set<ArticleComment> articlecomments = new LinkedHashSet<>();
@@ -44,15 +46,16 @@ public class Article extends AuditingFields{
     protected Article() {
     }
 
-    private Article(String title, String content, String hashtag) {
+    private Article(UserAccount userAccount, String title, String content, String hashtag) {
+        this.userAccount = userAccount;
         this.title = title;
         this.content = content;
         this.hashtag = hashtag;
     }
 
     // factory method로 접근하도록 설정
-    public static Article of(String title, String content, String hashtag) {
-        return new Article(title, content, hashtag);
+    public static Article of(UserAccount userAccount, String title, String content, String hashtag) {
+        return new Article(userAccount, title, content, hashtag);
     }
 
     // 리스트, 컬렉션 (중복요소 체크) 또는 정렬
