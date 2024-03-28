@@ -1,19 +1,43 @@
 package org.board.boardproject.dto;
 
+import org.board.boardproject.domain.Article;
+import org.board.boardproject.domain.ArticleComment;
+
 import java.time.LocalDateTime;
 
-public class ArticleCommentDTO {
-    private LocalDateTime createdAt;
-    private String createdBy;
-    private LocalDateTime modifiedAt;
-    private String modifiedBy;
-    private String content;
+public record ArticleCommentDTO (
+    Long id,
+    Long articleId,
+    UserAccountDTO userAccountDTO,
+    String content,
+    LocalDateTime createdAt,
+    String createdBy,
+    LocalDateTime modifiedAt,
+    String modifiedBy
+) {
 
-    private ArticleCommentDTO(LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy, String content) {
-    }
+    public static ArticleCommentDTO of(Long id, Long articleId, UserAccountDTO userAccountDto, String content, LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt, String modifiedBy) {
+            return new ArticleCommentDTO(id, articleId, userAccountDto, content, createdAt, createdBy, modifiedAt, modifiedBy);
+        }
 
-    public static ArticleCommentDTO of(LocalDateTime createdAt, String createdBy, LocalDateTime modifiedAt,
-                                       String modifiedBy, String content) {
-        return new ArticleCommentDTO(createdAt, createdBy, modifiedAt, modifiedBy, content);
+        public static ArticleCommentDTO from(ArticleComment entity) {
+            return new ArticleCommentDTO(
+                    entity.getId(),
+                    entity.getArticle().getId(),
+                    UserAccountDTO.from(entity.getUserAccount()),
+                    entity.getContent(),
+                    entity.getCreatedAt(),
+                    entity.getCreatedBy(),
+                    entity.getModifiedAt(),
+                    entity.getModifiedBy()
+            );
+        }
+
+        public ArticleComment toEntity(Article entity) {
+            return ArticleComment.of(
+                    entity,
+                    userAccountDTO.toEntity(),
+                    content
+            );
+        }
     }
-}

@@ -21,6 +21,8 @@ spring:
     properties:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
+      # jpa session close
+    open-in-view: false
   # h2 console url connect false -> true change
   h2.console.enabled: false
   sql.init.mode: always
