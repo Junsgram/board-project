@@ -26,7 +26,8 @@ public class ArticleService {
         if (searchKeyword == null || searchKeyword.isBlank()) {
             return articleRepository.findAll(pageable).map(ArticleDTO::from);
         }
-        // searchType 각 각 쿼리문 작성
+        // searchType 각 각 쿼리문 작성®
+
         return switch (searchType) {
             // mapping해서 dto로 변경 후 리턴
             case TITLE -> articleRepository.findByTitleContaining(searchKeyword, pageable).map(ArticleDTO::from);
