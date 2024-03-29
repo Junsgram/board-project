@@ -39,6 +39,7 @@ public class ArticleController {
         map.addAttribute("articles", articles);
         map.addAttribute("paginationBarNumbers", barNumbers);
         return "/articles/index";
+
     }
     @GetMapping("/{articleId}")
     public String articles(@PathVariable("articleId") Long articleId, ModelMap map) {
