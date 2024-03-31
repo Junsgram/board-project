@@ -4,10 +4,10 @@ insert into user_account (user_id, user_password, nickname, email, memo, created
     ('Jun', 'asdf1234', 'Jun', 'Jun@mail.com', 'I am Jun.', now(), 'Jun', now(), 'Jun')
 ;
 insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
-    ('Jun1', 'asdf1234', 'Jun1', 'Jun2@mail.com', 'I am Jun.', now(), 'Jun1', now(), 'Jun2')
+    ('Jun2', 'asdf1234', 'Jun2', 'Jun2@mail.com', 'I am Jun.', now(), 'Jun1', now(), 'Jun2')
 ;
 
--- 123 게시글
+-- 123 게시글0
 insert into article (user_account_id, title, content, hashtag, created_by, modified_by, created_at, modified_at) values
                                                                                                                      (1, 'Quisque ut erat.', 'Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.
 
