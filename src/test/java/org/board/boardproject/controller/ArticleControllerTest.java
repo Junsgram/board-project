@@ -6,7 +6,6 @@ import org.board.boardproject.dto.ArticleWithCommentsDTO;
 import org.board.boardproject.dto.UserAccountDTO;
 import org.board.boardproject.service.ArticleService;
 import org.board.boardproject.service.PaginationService;
-import org.board.boardproject.service.PaginationServiceTest;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,6 +74,7 @@ class ArticleControllerTest {
     }
 
 
+    @Disabled("구현 중")
     @DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출 확인 ")
     @Test
     // test mehtod
@@ -109,17 +109,59 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/search"));
     }
 
-    @Disabled("구현 중 ")
     @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출 확인 ")
     @Test
     // test mehtod
     public void givenNothing_whenRequestingArticleHashtagSearchView_thenReturnsArticleHashtagSearchView() throws Exception {
-        mvc.perform(get("/article/search-hastag"))
+        // Given
+        List<String> hashtags = List.of("#java","#Spring","#boot");
+        given(articleService.searchArticlesViaHashtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.getHashtags()).willReturn(hashtags);
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
+        // When & Then
+        mvc.perform(get("/articles/search-hashtag"))
                 // 200 ok가 진행되었는 지 확인하는 메소드 stauts()
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/hastag"));
+                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(model().attribute("articles", Page.empty()))
+                .andExpect(model().attribute("hashtags", hashtags))
+                .andExpect(model().attributeExists("paginationBarNumbers"))
+                .andExpect(model().attribute("searchType", SearchType.HASHTAG));
+        then(articleService).should().searchArticlesViaHashtag(eq(null), any(Pageable.class));
+        then(articleService).should().getHashtags();
+        then(paginationService).should().getPaginationBarNumbers(anyInt(),anyInt());
+    }
+
+    @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출 확인, 해시태그 입력한 경우 테스트 ")
+    @Test
+    // test mehtod
+    public void givenHashtag_whenRequestingArticleHashtagSearchView_thenReturnsArticleHashtagSearchView() throws Exception {
+        // Given
+        String hashtag = "#java";
+        List<String> hashtags = List.of("#java","#Spring","#boot");
+        given(articleService.searchArticlesViaHashtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
+        given(articleService.getHashtags()).willReturn(hashtags);
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(0,1,2,3,4));
+
+        // When & Then
+        mvc.perform(
+                get("/articles/search-hashtag")
+                        .queryParam("searchKeyword", hashtag)
+
+        )
+                // 200 ok가 진행되었는 지 확인하는 메소드 stauts()
+                .andExpect(status().isOk())
+                // content의 내용의 타입을 확인 - view라서 text_html로 진행
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
+                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(model().attribute("articles", Page.empty()))
+                .andExpect(model().attribute("hashtags",hashtags))
+                .andExpect(model().attributeExists("paginationBarNumbers"));
+        then(articleService).should().searchArticlesViaHashtag(eq(hashtag), any(Pageable.class));
+        then(articleService).should().getHashtags();
+        then(paginationService).should().getPaginationBarNumbers(anyInt(),anyInt());
     }
 
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 검색어를 제공하고 해당되는 내용을 출력 ")

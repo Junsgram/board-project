@@ -8,6 +8,7 @@ import org.board.boardproject.domain.QArticle;
 import org.board.boardproject.domain.constant.SearchType;
 import org.board.boardproject.dto.ArticleDTO;
 import org.board.boardproject.dto.ArticleWithCommentsDTO;
+import org.board.boardproject.repository.querydsl.ArticleRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +24,9 @@ public interface ArticleRepository extends
         JpaRepository<Article, Long>,
         // Article안에 있는 모든 필드에 대한 기본 검색기능을 추가
         QuerydslPredicateExecutor<Article>,
-        QuerydslBinderCustomizer<QArticle>{
+        QuerydslBinderCustomizer<QArticle>,
+        ArticleRepositoryCustom
+{
 
     Page<Article> findByTitleContaining(String title, Pageable pageable);
     Page<Article> findByContentContaining(String content, Pageable pageable);
