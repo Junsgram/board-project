@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -66,7 +67,25 @@ public class ArticleService {
         }
     }
 
+    public long getArticleCount() {
+        return articleRepository.count();
+    }
+
     public void deleteArticle(Long articleId) {
         articleRepository.deleteById(articleId);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ArticleDTO> searchArticlesViaHashtag(String hashtag, Pageable pageable) {
+        if (hashtag == null || hashtag.isBlank()) {
+            // 해시태그 검색 전 빈페이지를 먼저 호출 할 예정
+            return Page.empty(pageable);
+        }
+        // DTO로 값을 받아 뿌려준다 - view에 DTO로 받아 값을 출력하기 때문에
+        return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDTO::from);
+    }
+
+    public List<String> getHashtags() {
+        return articleRepository.findAllDistinctHashtags();
     }
 }
