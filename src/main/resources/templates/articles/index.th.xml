@@ -6,6 +6,7 @@
     <!-- 검색 thymeleaf -->
     <!-- param은 타임리프에서 제공하는 코드로 직전에 값을 받아와 같은 지 확인하느 내용 -->
     <attr sel="main" th:object="${articles}">
+        <attr sel="#search-form" th:action="@{/articles}" th:method="get" />
         <attr sel="#search-type" th:remove="all-but-first">
             <attr sel = "option[0]"
                   th:each="searchType: ${searchTypes}"
@@ -54,6 +55,8 @@
                 </attr>
             </attr>
         </attr>
+
+        <attr sel="#write-article" th:href="@{/articles/form}" />
 
         <!-- Pagination 적용 및 삼항 연산자로 disabled 활성화 진행 -->
         <attr sel="#pagination">

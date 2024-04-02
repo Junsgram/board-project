@@ -24,7 +24,7 @@
             <h1> 첫번째 글</h1>
         </header>
         <div class="row g-5">
-            <section class="col-md-5 col-lg-4 order-md-last">
+            <section class="col-md-3 col-lg-4 order-md-last">
                 <aside>
                     <p><span id="nickname" class="nick-name">Jun</span></p>
                     <p><a id="email" class="u-url" rel="me" href="mailto:jun951213@gmail.com">jun951213@gmail.com</a></p>
@@ -34,25 +34,35 @@
                 </aside>
             </section>
 
-            <article id="article-content" class="col-md-7 col-lg-8">
-                <p>본문<br><br></p>
+            <article id="article-content" class="col-md-9 col-lg-8">
+                <p>본문</p>
             </article>
         </div>
+
+        <div class="row g-5" id="article-buttons">
+            <form id="delete-article-form">
+                <div class="pb-5 d-grid gap-2 d-md-block">
+                    <a class="btn btn-success me-md-2" role="button" id="update-article">수정</a>
+                    <button class="btn btn-danger me-md-2" type="submit">삭제</button>
+                </div>
+            </form>
+        </div>
+
         <div class="row g-5">
             <section>
                 <form class="row g-3">
-                    <div class="col-8">
+                    <div class="col-md-9 col-lg-8">
                         <label for="comment-textbox" hidden>댓글</label>
                         <textarea class="form-control" id="comment-textbox" placeholder="댓글 쓰기.." rows="3"></textarea>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-md-3 col-lg-4">
                         <label for="comment-submit" hidden>댓글 쓰기</label>
                         <button class="btn btn-primary" id="comment-submit" type="submit">쓰기</button>
                     </div>
                 </form>
-                <ul id="article-comments" class="col-7" >
+                <ul id="article-comments" class="col-md-10 col-lg-8 pt-3" >
                     <li>
-                        <div>
+                        <div class="row">
                             <time><small>2022-01-01</small></time>
                             <strong>Juns</strong>
                             <p>
@@ -62,9 +72,9 @@
                         </div>
                     </li>
                     <li>
-                        <div>
+                        <div class="row">
                             <time><small>2022-01-01</small></time>
-                            <strong>Juns</strong>
+                            <strong>Juns2</strong>
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
                                 Lorem ipsum dolor sit amet
@@ -76,7 +86,7 @@
         </div>
 
         <div class="row g-5">
-            <nav aria-label="Page navigation example">
+            <nav id="pagination" aria-label="Page navigation ">
                 <ul class="pagination">
                     <li class="page-item">
                         <a class="page-link" href="#" aria-label="Previous">
