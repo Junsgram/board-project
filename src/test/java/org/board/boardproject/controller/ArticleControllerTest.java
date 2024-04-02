@@ -4,8 +4,6 @@ import org.board.boardproject.config.SecurityConfig;
 import org.board.boardproject.domain.constant.FormStatus;
 import org.board.boardproject.domain.constant.SearchType;
 import org.board.boardproject.dto.ArticleDTO;
-import org.board.boardproject.dto.ArticleWithCommentsDTO;
-import org.board.boardproject.dto.UserAccountDTO;
 import org.board.boardproject.dto.request.ArticleRequest;
 import org.board.boardproject.dto.response.ArticleResponse;
 import org.board.boardproject.service.ArticleService;
@@ -23,9 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
