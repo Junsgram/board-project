@@ -1,8 +1,8 @@
 package org.board.boardproject.dto;
 
 import org.board.boardproject.domain.Article;
+import org.board.boardproject.domain.UserAccount;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record ArticleDTO(
@@ -20,6 +20,10 @@ public record ArticleDTO(
         return new ArticleDTO(id, userAccountDto, title, content, hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
+    public static ArticleDTO of(UserAccountDTO userAccountDto, String title, String content, String hashtag) {
+        return new ArticleDTO(null, userAccountDto, title, content, hashtag, null, null, null, null);
+    }
+
     public static ArticleDTO from(Article entity) {
         return new ArticleDTO(
                 entity.getId(),
@@ -34,9 +38,9 @@ public record ArticleDTO(
         );
     }
 
-    public Article toEntity() {
+    public Article toEntity(UserAccount userAccount) {
         return Article.of(
-                userAccountDTO.toEntity(),
+                userAccount,
                 title,
                 content,
                 hashtag

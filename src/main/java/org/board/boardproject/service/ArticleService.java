@@ -3,10 +3,12 @@ package org.board.boardproject.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.board.boardproject.domain.Article;
+import org.board.boardproject.domain.UserAccount;
 import org.board.boardproject.domain.constant.SearchType;
 import org.board.boardproject.dto.ArticleDTO;
 import org.board.boardproject.dto.ArticleWithCommentsDTO;
 import org.board.boardproject.repository.ArticleRepository;
+import org.board.boardproject.repository.UserAccountRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.List;
 @Log4j2
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserAccountRepository userAccountRepository;
 
     @Transactional(readOnly = true)
     public Page<ArticleDTO> searchArticles(SearchType searchType, String searchKeyword, Pageable pageable) {
@@ -41,19 +44,28 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ArticleWithCommentsDTO getArticle(Long articleId) {
+    public ArticleWithCommentsDTO getArticleWithComments(Long articleId) {
         return articleRepository.findById(articleId)
                 .map(ArticleWithCommentsDTO::from)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
     }
 
-    public void saveArticle(ArticleDTO dto) {
-        articleRepository.save(dto.toEntity());
+    @Transactional(readOnly = true)
+    public ArticleDTO getArticle(Long articleId) {
+        return articleRepository.findById(articleId)
+                .map(ArticleDTO::from)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다 - articleId: " + articleId));
     }
 
-    public void updateArticle(ArticleDTO dto) {
+
+    public void saveArticle(ArticleDTO dto) {
+        UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDTO().userId());
+        articleRepository.save(dto.toEntity(userAccount));
+    }
+
+    public void updateArticle(Long articleId, ArticleDTO dto) {
         try {
-            Article article = articleRepository.getReferenceById(dto.id());
+            Article article = articleRepository.getReferenceById(articleId);
             if (dto.title() != null) {
                 article.setTitle(dto.title());
             }
@@ -88,4 +100,5 @@ public class ArticleService {
     public List<String> getHashtags() {
         return articleRepository.findAllDistinctHashtags();
     }
+
 }
