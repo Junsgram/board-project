@@ -2,6 +2,7 @@ package org.board.boardproject.dto;
 
 import org.board.boardproject.domain.Article;
 import org.board.boardproject.domain.ArticleComment;
+import org.board.boardproject.domain.UserAccount;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,10 @@ public record ArticleCommentDTO (
             return new ArticleCommentDTO(id, articleId, userAccountDto, content, createdAt, createdBy, modifiedAt, modifiedBy);
         }
 
+    public static ArticleCommentDTO of(Long articleId, UserAccountDTO userAccountDto, String content) {
+        return new ArticleCommentDTO(null, articleId, userAccountDto, content, null, null, null, null);
+    }
+
         public static ArticleCommentDTO from(ArticleComment entity) {
             return new ArticleCommentDTO(
                     entity.getId(),
@@ -33,10 +38,10 @@ public record ArticleCommentDTO (
             );
         }
 
-        public ArticleComment toEntity(Article entity) {
+        public ArticleComment toEntity(Article article, UserAccount userAccount) {
             return ArticleComment.of(
-                    entity,
-                    userAccountDTO.toEntity(),
+                    article,
+                    userAccount,
                     content
             );
         }
