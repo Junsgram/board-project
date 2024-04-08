@@ -34,6 +34,8 @@ public interface ArticleRepository extends
     Page<Article> findByUserAccount_NicknameContaining(String nickname, Pageable pageable);
     Page<Article> findByHashtag(String hashtag, Pageable pageable);
 
+    void deleteByIdAndUserAccount_UserId(Long articleId, String UserId);
+
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
         // QuerydslPredicateExecutor로 인하여 모든 검색기능이 추가되었지만, 메소드를 활용해서 제외 및 추가를 진행할 예정

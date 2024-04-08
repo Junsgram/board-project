@@ -7,9 +7,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 // 아래에 어노테이션은 이 test단에서만 작동되므로 yml에 적용하여 모든 test단에 적용할 수 있도록 지정
@@ -21,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("JPA 연결 테스트")
 // Import 어노테이션은 테스트단에서 EnableJpaAuditing 어노테이션이 자동으로 생성되지 않아 잡아줘야한다
-@Import(JpaConfig.class)
+@Import(JpaRepositoryTest.TestJpaConfig.class)
 @DataJpaTest
 class JpaRepositoryTest {
     private final ArticleRepository articleRepository;
@@ -104,4 +109,16 @@ class JpaRepositoryTest {
         assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
         assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentsSize);
     }
+
+    // jpaconfig를 위한 static 클래스
+    // Import 어노테이션을 활용하여 해당 클래스만 확인할 수 있도록 지정
+    @EnableJpaAuditing
+    @TestConfiguration // Configuration으로 등록을 하지만, test를 진행할 때만 configuration을 진행
+    public static class TestJpaConfig {
+        @Bean
+        public AuditorAware<String> auditorAware() {
+            return () -> Optional.of("jun");
+        }
+    }
+
 }
