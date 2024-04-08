@@ -4,8 +4,6 @@ import org.board.boardproject.config.TestSecurityConfig;
 import org.board.boardproject.domain.constant.FormStatus;
 import org.board.boardproject.domain.constant.SearchType;
 import org.board.boardproject.dto.ArticleDTO;
-import org.board.boardproject.dto.ArticleWithCommentsDTO;
-import org.board.boardproject.dto.UserAccountDTO;
 import org.board.boardproject.dto.request.ArticleRequest;
 import org.board.boardproject.dto.response.ArticleResponse;
 import org.board.boardproject.service.ArticleService;
@@ -26,9 +24,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
