@@ -1,9 +1,11 @@
 package org.board.boardproject.controller;
 
-import org.board.boardproject.config.SecurityConfig;
+import org.board.boardproject.config.TestSecurityConfig;
 import org.board.boardproject.domain.constant.FormStatus;
 import org.board.boardproject.domain.constant.SearchType;
 import org.board.boardproject.dto.ArticleDTO;
+import org.board.boardproject.dto.ArticleWithCommentsDTO;
+import org.board.boardproject.dto.UserAccountDTO;
 import org.board.boardproject.dto.request.ArticleRequest;
 import org.board.boardproject.dto.response.ArticleResponse;
 import org.board.boardproject.service.ArticleService;
@@ -19,21 +21,26 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
-import static org.springframework.http.RequestEntity.post;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 
 @DisplayName(" View 컨트롤러 - 게시글 ")
-@Import({SecurityConfig.class, FormDataEncoder.class})
+@Import({TestSecurityConfig.class, FormDataEncoder.class})
 // webMvcTest는 지정하지 않으면 모든 컨트롤러를 바라보기에 해당 클래스를 지정해서 사용
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
@@ -79,10 +86,21 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
 
     }
+    @DisplayName("[view][GET] 게시글 상세 페이지 - 인증이 정상적으로 통과하지 않았을 때 로그인 페이지로 이동")
+    @Test
+    public void givenNothing_whenRequestingArticle_thenRedirectToLoginPage() throws Exception {
+        // Given
+        long articleId = 1L;
+        // When & Then
+        mvc.perform(get("/articles/" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+        then(articleService).shouldHaveNoInteractions();
+        then(articleService).shouldHaveNoInteractions();
+    }
 
-
-    @Disabled("구현 중")
-    @DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출 확인 ")
+    @WithMockUser // 인증 정보를 통과를 진행시키는 메소드
+    @DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출 확인, 인증된 사용자 ")
     @Test
     // test mehtod
     public void givenNothing_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
@@ -103,19 +121,6 @@ class ArticleControllerTest {
                 .andExpect(model().attributeExists("article_comment"));
         then(articleService).should().getArticle(articleId);
         then(articleService).should().getArticleWithComments(articleId);
-
-    }
-    @Disabled("구현 중 ")
-    @DisplayName("[view][GET] 게시글 검색 전용 페이지 - 정상 호출 확인 ")
-    @Test
-    // test mehtod
-    public void givenNothing_whenRequestingArticleSearchView_thenReturnsArticleSearchView() throws Exception {
-        mvc.perform(get("/article/search"))
-                // 200 ok가 진행되었는 지 확인하는 메소드 stauts()
-                .andExpect(status().isOk())
-                // content의 내용의 타입을 확인 - view라서 text_html로 진행
-                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/search"));
     }
 
     @DisplayName("[view][GET] 게시글 해시태그 검색 페이지 - 정상 호출 확인 ")
@@ -133,7 +138,7 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(view().name("/articles/search-hashtag"))
                 .andExpect(model().attribute("articles", Page.empty()))
                 .andExpect(model().attribute("hashtags", hashtags))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
@@ -164,7 +169,7 @@ class ArticleControllerTest {
                 .andExpect(status().isOk())
                 // content의 내용의 타입을 확인 - view라서 text_html로 진행
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/search-hashtag"))
+                .andExpect(view().name("/articles/search-hashtag"))
                 .andExpect(model().attribute("articles", Page.empty()))
                 .andExpect(model().attribute("hashtags",hashtags))
                 .andExpect(model().attributeExists("paginationBarNumbers"));
@@ -203,6 +208,7 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(anyInt(), anyInt());
     }
 
+    @WithMockUser
     @DisplayName("[view][GET] 새 게시글 작성 페이지")
     @Test
     void givenNothing_whenRequesting_thenReturnsNewArticlePage() throws Exception {
@@ -212,10 +218,17 @@ class ArticleControllerTest {
         mvc.perform(get("/articles/form"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                .andExpect(view().name("articles/form"))
+                .andExpect(view().name("/articles/form"))
                 .andExpect(model().attribute("formStatus", FormStatus.CREATE));
     }
 
+    /*
+     *  WithUserDetails 구현된 userDetails를 사용할 수 있는 어노테이션 단, 유저정보도 DB에 있어야한다
+     *  setupBefore = TestExecutionEvent.TEST_EXECUTION : 테스트를 진행하기 전에 지정된 테스트를 마치고 테스트를 진행
+     *  userDetailsServiceBeanName = "userDetailService" -> securityConfig에서 구현된 userDetails를 기입
+     *  value = junTest의 값은 TestSecurity에 지정된 값을 기입
+     */
+    @WithUserDetails(value = "junTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][POST] 새 게시글 등록 - 정상 호출")
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
@@ -236,7 +249,8 @@ class ArticleControllerTest {
         then(articleService).should().saveArticle(any(ArticleDTO.class));
     }
 
-    @DisplayName("[view][GET] 게시글 수정 페이지")
+    @WithMockUser
+    @DisplayName("[view][GET] 게시글 수정 페이지 - 인증 완료")
     @Test
     void givenNothing_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
         // Given
@@ -254,7 +268,21 @@ class ArticleControllerTest {
         then(articleService).should().getArticle(articleId);
     }
 
-    @DisplayName("[view][POST] 게시글 수정 - 정상 호출")
+
+    @DisplayName("[view][POST] 게시글 수정 - 인증 없을 땐 로그인 페이지로 이동")
+    @Test
+    public void givenNothing_whenRequesting_thenRedirectToLoginPage() throws Exception {
+        // Given
+        long articleId = 1L;
+        // When & Then
+        mvc.perform(get("/articles/" + articleId + "/form"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+        then(articleService).shouldHaveNoInteractions();
+    }
+
+    @WithUserDetails(value = "junTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("[view][POST] 게시글 수정 - 정상 호출 , 인증 완료")
     @Test
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
         // Given
@@ -275,12 +303,14 @@ class ArticleControllerTest {
         then(articleService).should().updateArticle(eq(articleId), any(ArticleDTO.class));
     }
 
-    @DisplayName("[view][POST] 게시글 삭제 - 정상 호출")
+    @WithUserDetails(value = "junTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("[view][POST] 게시글 삭제 - 정상 호출, 인증 완료")
     @Test
     void givenArticleIdToDelete_whenRequesting_thenDeletesArticle() throws Exception {
         // Given
         long articleId = 1L;
-        willDoNothing().given(articleService).deleteArticle(articleId);
+        String userId = "junTest";
+        willDoNothing().given(articleService).deleteArticle(articleId, userId);
 
         // When & Then
         mvc.perform(
@@ -291,7 +321,7 @@ class ArticleControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles"))
                 .andExpect(redirectedUrl("/articles"));
-        then(articleService).should().deleteArticle(articleId);
+        then(articleService).should().deleteArticle(articleId, userId);
     }
 
 
@@ -301,6 +331,35 @@ class ArticleControllerTest {
                 "title",
                 "content",
                 "#java"
+        );
+    }
+
+    private ArticleWithCommentsDTO createArticleWithCommentsDto() {
+        return ArticleWithCommentsDTO.of(
+                1L,
+                createUserAccountDto(),
+                Set.of(),
+                "title",
+                "content",
+                "#java",
+                LocalDateTime.now(),
+                "jun",
+                LocalDateTime.now(),
+                "jun"
+        );
+    }
+
+    private UserAccountDTO createUserAccountDto() {
+        return UserAccountDTO.of(
+                "jun",
+                "pw",
+                "jun@mail.com",
+                "Jun",
+                "memo",
+                LocalDateTime.now(),
+                "jun",
+                LocalDateTime.now(),
+                "jun"
         );
     }
 
