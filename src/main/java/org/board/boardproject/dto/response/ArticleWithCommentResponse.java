@@ -15,11 +15,12 @@ public record ArticleWithCommentResponse (Long id,
                                          LocalDateTime createdAt,
                                          String email,
                                          String nickname,
+                                          String userId,
                                          Set<ArticleCommentResponse> articleCommentsResponse
 ) implements Serializable {
 
-    public static ArticleWithCommentResponse of(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String email, String nickname, Set<ArticleCommentResponse> articleCommentsResponse) {
-        return new ArticleWithCommentResponse(id, title, content, hashtag, createdAt, email, nickname, articleCommentsResponse);
+    public static ArticleWithCommentResponse of(Long id, String title, String content, String hashtag, LocalDateTime createdAt, String email, String nickname, String userId, Set<ArticleCommentResponse> articleCommentsResponse) {
+        return new ArticleWithCommentResponse(id, title, content, hashtag, createdAt, email, nickname, userId,articleCommentsResponse);
     }
 
     public static ArticleWithCommentResponse from(ArticleWithCommentsDTO dto) {
@@ -36,6 +37,7 @@ public record ArticleWithCommentResponse (Long id,
                 dto.createdAt(),
                 dto.userAccountDTO().email(),
                 nickname,
+                dto.userAccountDTO().userId(),
                 dto.articleCommentDtos().stream()
                         .map(ArticleCommentResponse::from)
                         .collect(Collectors.toCollection(LinkedHashSet::new))
