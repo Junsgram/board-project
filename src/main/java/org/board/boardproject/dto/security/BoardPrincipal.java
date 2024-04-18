@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 public record BoardPrincipal(
         String username,
         String password,
@@ -18,6 +19,7 @@ public record BoardPrincipal(
         String nickname,
         String memo
 ) implements UserDetails {
+
 
     public static BoardPrincipal of(String username, String password, String email, String nickname, String memo) {
         Set<RoleType> roleTypes = Set.of(RoleType.USER);
@@ -58,8 +60,8 @@ public record BoardPrincipal(
         );
     }
 
-    @Override public String getPassword() { return username; }
-    @Override public String getUsername() { return password; }
+    @Override public String getPassword() { return password; }
+    @Override public String getUsername() { return username; }
 
     // 인증이 아닌 권한을 관리하는 메소드
     @Override public Collection<? extends GrantedAuthority> getAuthorities() { return null; }
